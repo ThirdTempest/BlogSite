@@ -3,20 +3,22 @@
 @section('title', 'Verify OTP')
 
 @section('content')
+<!-- Header Icon -->
+<div class="w-14 h-14 bg-white rounded-2xl shadow-sm border border-slate-200/60 flex items-center justify-center mx-auto mb-4 text-slate-700 text-lg">
+    <i class="fa-solid fa-envelope-circle-check text-slate-800"></i>
+</div>
+
 <div class="text-center mb-6">
-    <div class="w-14 h-14 mx-auto mb-3 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-2xl border border-indigo-500/30">
-        <i class="fa-solid fa-envelope-circle-check"></i>
-    </div>
-    <h2 class="text-xl font-bold text-white">Verify Your Email</h2>
-    <p class="text-xs text-slate-300 mt-1">
+    <h2 class="text-2xl font-extrabold text-slate-900 tracking-tight">Verify Your Email</h2>
+    <p class="text-xs text-slate-500 mt-1">
         We sent a 6-digit verification code to:
     </p>
-    <div class="inline-block mt-1 px-3 py-1 bg-indigo-950/80 border border-indigo-800 rounded-lg text-xs font-semibold text-indigo-300">
+    <div class="inline-block mt-2 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg text-xs font-bold text-slate-800">
         {{ $user->email }}
     </div>
 </div>
 
-<form action="{{ route('otp.submit') }}" method="POST" id="otpForm" class="space-y-5">
+<form action="{{ route('otp.submit') }}" method="POST" id="otpForm" class="space-y-4">
     @csrf
 
     <!-- Hidden Unified OTP Input -->
@@ -24,7 +26,7 @@
 
     <!-- 6-Box OTP Input -->
     <div>
-        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-300 text-center mb-2.5">
+        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 text-center mb-2.5">
             Enter 6-Digit Code
         </label>
         <div class="flex justify-center gap-2 sm:gap-2.5">
@@ -35,38 +37,37 @@
                        inputmode="numeric" 
                        pattern="[0-9]*" 
                        autocomplete="one-time-code"
-                       class="otp-digit w-11 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold bg-slate-900/70 border @error('otp') border-rose-500 @else border-slate-700 @enderror rounded-xl text-white focus:outline-hidden focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition">
+                       class="otp-digit w-11 h-12 sm:w-12 sm:h-14 text-center text-xl font-bold bg-slate-100/90 border @error('otp') border-rose-400 @else border-slate-200/80 @enderror rounded-xl text-slate-900 focus:outline-hidden focus:ring-2 focus:ring-slate-900/15 focus:bg-white focus:border-slate-300 transition">
             @endfor
         </div>
         @error('otp')
-            <p class="mt-2 text-xs text-rose-400 text-center flex items-center justify-center">
+            <p class="mt-2 text-xs text-rose-500 text-center flex items-center justify-center">
                 <i class="fa-solid fa-circle-exclamation mr-1"></i> {{ $message }}
             </p>
         @enderror
     </div>
 
     <!-- Countdown Timer & Status -->
-    <div class="text-center text-xs text-slate-400 flex items-center justify-center space-x-1.5">
-        <i class="fa-regular fa-clock text-indigo-400"></i>
+    <div class="text-center text-xs text-slate-500 flex items-center justify-center space-x-1.5">
+        <i class="fa-regular fa-clock text-slate-400"></i>
         <span>Code expires in:</span>
-        <span id="countdownTimer" class="font-mono font-bold text-indigo-300">10:00</span>
+        <span id="countdownTimer" class="font-mono font-bold text-slate-800">10:00</span>
     </div>
 
     <!-- Submit Button -->
     <button type="submit" 
             id="verifyBtn" 
-            class="w-full py-2.5 px-4 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-indigo-600/30 transition duration-150 transform active:scale-[0.98] flex items-center justify-center space-x-2">
+            class="w-full py-3 px-4 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white font-semibold rounded-xl text-sm shadow-md shadow-slate-900/15 transition duration-150 flex items-center justify-center space-x-2 mt-2">
         <span>Verify & Enter Dashboard</span>
-        <i class="fa-solid fa-arrow-right text-xs"></i>
     </button>
 </form>
 
 <!-- Resend OTP Form -->
-<div class="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-    <span class="text-slate-400">Didn't receive code?</span>
+<div class="mt-5 pt-4 border-t border-slate-200/80 flex items-center justify-between text-xs">
+    <span class="text-slate-500">Didn't receive code?</span>
     <form action="{{ route('otp.resend') }}" method="POST" class="inline">
         @csrf
-        <button type="submit" class="text-indigo-400 hover:text-indigo-300 font-semibold transition flex items-center space-x-1">
+        <button type="submit" class="text-slate-900 hover:text-indigo-600 font-semibold transition flex items-center space-x-1">
             <i class="fa-solid fa-rotate-right text-[11px] mr-1"></i>
             <span>Resend Code</span>
         </button>
@@ -77,7 +78,7 @@
 <div class="mt-3 text-center">
     <form action="{{ route('logout') }}" method="POST" class="inline">
         @csrf
-        <button type="submit" class="text-xs text-slate-400 hover:text-rose-400 transition">
+        <button type="submit" class="text-xs text-slate-500 hover:text-rose-600 transition">
             <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Sign out & try another account
         </button>
     </form>
@@ -149,7 +150,7 @@
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             timerEl.textContent = 'Expired';
-            timerEl.className = 'font-mono font-bold text-rose-400';
+            timerEl.className = 'font-mono font-bold text-rose-500';
             return;
         }
         timeLeft--;
@@ -159,4 +160,3 @@
     }, 1000);
 </script>
 @endsection
-

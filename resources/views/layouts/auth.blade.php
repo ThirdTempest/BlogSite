@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Automata') }} - @yield('title', 'Authentication')</title>
+    <title>{{ config('app.name', 'BlogSite System') }} - @yield('title', 'Authentication')</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,12 +26,10 @@
                     },
                     colors: {
                         brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
+                            50: '#f0fdf4',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
                         }
                     }
                 }
@@ -39,55 +37,58 @@
         }
     </script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-image: url("{{ asset('background.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 antialiased relative overflow-x-hidden">
-    <!-- Ambient Background Lighting -->
-    <div class="absolute -top-40 -left-40 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
-    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl pointer-events-none"></div>
+<body class="min-h-screen flex flex-col justify-center items-center p-4 sm:p-6 antialiased relative selection:bg-slate-900 selection:text-white">
+    <!-- Top-Left Brand Logo & Title -->
+    <div class="absolute top-5 left-5 sm:top-7 sm:left-8 flex items-center space-x-2.5 z-20">
+        <a href="{{ url('/') }}" class="flex items-center space-x-2.5 group">
+            <div class="w-8 h-8 rounded-xl overflow-hidden shadow-xs border border-white/60 bg-white/70 backdrop-blur-md flex items-center justify-center p-1 group-hover:scale-105 transition">
+                <img src="{{ asset('bloglogo.png') }}" alt="BlogSite Logo" class="w-full h-full object-contain">
+            </div>
+            <span class="font-extrabold text-slate-900 text-base tracking-tight drop-shadow-xs">BlogSite</span>
+        </a>
+    </div>
 
-    <div class="w-full max-w-md my-auto relative z-10">
-        <!-- Brand Header -->
-        <div class="text-center mb-6">
-            <a href="{{ url('/') }}" class="inline-flex items-center space-x-3 mb-2">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center text-white font-black text-xl shadow-lg shadow-indigo-500/30 ring-1 ring-white/20">
-                    <i class="fa-solid fa-layer-group"></i>
-                </div>
-            </a>
-            <h1 class="text-2xl font-bold tracking-tight text-white">BlogSite System</h1>
-            <p class="text-xs text-indigo-200/70 mt-1">A Site with Good Security</p>
-        </div>
-
+    <!-- Centered Card Container -->
+    <div class="w-full max-w-[430px] my-auto relative z-10 pt-12 sm:pt-0">
         <!-- Flash Alert Messages -->
         @if(session('success'))
-            <div class="mb-4 bg-emerald-950/80 border border-emerald-500/30 text-emerald-300 rounded-xl p-3.5 flex items-center text-sm backdrop-blur-md">
-                <i class="fa-solid fa-circle-check text-emerald-400 mr-2.5"></i>
+            <div class="mb-4 bg-emerald-50/90 border border-emerald-300 text-emerald-800 rounded-2xl p-3.5 flex items-center text-xs backdrop-blur-md shadow-xs">
+                <i class="fa-solid fa-circle-check text-emerald-600 mr-2.5 text-sm"></i>
                 <span>{{ session('success') }}</span>
             </div>
         @endif
 
         @if(session('status'))
-            <div class="mb-4 bg-indigo-950/80 border border-indigo-500/30 text-indigo-200 rounded-xl p-3.5 flex items-center text-sm backdrop-blur-md">
-                <i class="fa-solid fa-circle-info text-indigo-400 mr-2.5"></i>
+            <div class="mb-4 bg-sky-50/90 border border-sky-300 text-sky-800 rounded-2xl p-3.5 flex items-center text-xs backdrop-blur-md shadow-xs">
+                <i class="fa-solid fa-circle-info text-sky-600 mr-2.5 text-sm"></i>
                 <span>{{ session('status') }}</span>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="mb-4 bg-rose-950/80 border border-rose-500/30 text-rose-300 rounded-xl p-3.5 flex items-center text-sm backdrop-blur-md">
-                <i class="fa-solid fa-circle-exclamation text-rose-400 mr-2.5"></i>
+            <div class="mb-4 bg-rose-50/90 border border-rose-300 text-rose-800 rounded-2xl p-3.5 flex items-center text-xs backdrop-blur-md shadow-xs">
+                <i class="fa-solid fa-circle-exclamation text-rose-600 mr-2.5 text-sm"></i>
                 <span>{{ session('error') }}</span>
             </div>
         @endif
 
         <!-- Card Container -->
-        <div class="bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8 shadow-2xl shadow-black/40">
+        <div class="bg-white/80 backdrop-blur-2xl border border-white/90 rounded-[32px] p-7 sm:p-9 shadow-2xl shadow-sky-950/10">
             @yield('content')
         </div>
 
         <!-- Bottom Footer -->
-        <div class="text-center mt-6 text-xs text-slate-400">
+        <div class="text-center mt-5 text-xs text-slate-500 drop-shadow-xs">
             &copy; {{ date('Y') }} BlogSite System. All rights reserved.
         </div>
     </div>
@@ -95,4 +96,3 @@
     @yield('scripts')
 </body>
 </html>
-
