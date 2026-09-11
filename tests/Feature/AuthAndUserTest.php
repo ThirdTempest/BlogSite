@@ -206,6 +206,40 @@ class AuthAndUserTest extends TestCase
         ]);
     }
 
+    public function test_password_can_be_reset_with_valid_token_and_strict_password(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'resetuser@example.com',
+            'password' => Hash::make('OldPassword@123!'),
+        ]);
+
+        $token = 'test-reset-token-12345';
+        \Illuminate\Support\Facades\DB::table('password_reset_tokens')->insert([
+            'email' => 'resetuser@example.com',
+            'token' => Hash::make($token),
+            'created_at' => now(),
+        ]);
+
+        // Access the reset password page
+        $pageResponse = $this->get('/reset-password/' . $token . '?email=resetuser@example.com');
+        $pageResponse->assertStatus(200);
+
+        // Submit new strict password
+        $response = $this->post('/reset-password', [
+            'token' => $token,
+            'email' => 'resetuser@example.com',
+            'password' => 'NewPassword@2026!',
+            'password_confirmation' => 'NewPassword@2026!',
+        ]);
+
+        $response->assertRedirect('/login');
+        $response->assertSessionHas('status');
+        $this->assertTrue(Hash::check('NewPassword@2026!', $user->fresh()->password));
+        $this->assertDatabaseMissing('password_reset_tokens', [
+            'email' => 'resetuser@example.com',
+        ]);
+    }
+
     public function test_regular_user_cannot_access_user_management(): void
     {
         $user = User::factory()->create([

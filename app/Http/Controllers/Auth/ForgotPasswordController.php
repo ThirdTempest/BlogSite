@@ -47,17 +47,15 @@ class ForgotPasswordController extends Controller
 
         $resetUrl = route('password.reset', ['token' => $token, 'email' => $request->email]);
 
-        // Attempt sending standard email notification if mailer is functional
+        // Send branded reset password email notification via SMTP
         try {
             $user = User::where('email', $request->email)->first();
-            // Send standard Laravel password reset notification
-            $user->sendPasswordResetNotification($token);
+            Mail::to($user->email)->send(new \App\Mail\ResetPasswordMail($user, $resetUrl));
         } catch (\Throwable $e) {
-            // Log exception if SMTP is unavailable in local testing
-            logger()->warning('SMTP email send attempt failed: ' . $e->getMessage());
+            logger()->warning('SMTP ResetPasswordMail error: ' . $e->getMessage());
         }
 
-        return back()->with('status', 'We have emailed your password reset link!');
+        return back()->with('status', 'We have emailed your password reset link! Please check your inbox.');
     }
 }
 
